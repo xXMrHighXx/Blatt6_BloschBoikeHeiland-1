@@ -1,6 +1,6 @@
 \documentclass{scrartcl}
 	\input{usepackage.tex}
-
+	
 	\begin{document}
 		\input{formatAndHeader.tex}
 		
@@ -22,12 +22,16 @@
 			!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			
 			\paragraph*{e)}
-			Prozesse der Anzahl n, senden an jeweils n-1 prozesse nachrichten x mal\\
-			$(n \cdot (n-1)) \cdot x \Rightarrow n^2$
+			Prozesse der Anzahl n, senden an jeweils n-1 prozesse Nachrichten x mal\\
+			$(n \cdot (n-1)) \cdot x \Rightarrow n^2$\pagebreak
 			
 			
 		\section*{Aufgabe 3}
 			\paragraph*{a)}
-				Wenn mehrere Prozesse requesten, kann ein Prozess aushungern, da der Token zufällig zugeteilt wird.\\
-				Bsp.: P1 requested bei P2, P3 und P4 requesten im Wechsel immer wieder, sodass P1 nie den Token bekommt
+				Wenn zum Zeitpunkt der Tokenverteilung mehrere Requests von Prozessen vorliegen, kann ein Prozess aushungern, da der Token zufällig zugeteilt wird.\\
+				Bsp.: P1 und P2 requesten im Wechsel immer wieder, sodass P3 nie den Token bekommt (s.u.):\\[2em]
+						
+				\begin{figure}[h]
+					\includegraphics[scale=0.7]{aufgabe3a.pdf}
+				\end{figure}
 	\end{document}
