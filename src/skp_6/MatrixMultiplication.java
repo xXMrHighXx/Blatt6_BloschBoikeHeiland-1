@@ -4,6 +4,7 @@ public class MatrixMultiplication {
 
 	private static final String WRONG_FORMAT = "The format of the matrices doesn't allow multiplication!";
 	private static final String ERROR_MESSAGE = "Something went wrong...";
+	static int[][] result;
 
 	public static int[][] multiplyMatrices(int[][] matrixA, int[][] matrixB) {
 		// TODO: Multiply Matrices matrixA and matrixB and return result
@@ -13,25 +14,29 @@ public class MatrixMultiplication {
 		}
 
 		// Ergebnismatrix hat soviele Zeilen wie A und so viele Spalten wie B
-		int[][] result = new int[matrixA.length][matrixB[0].length];
+		result = new int[matrixA.length][matrixB[0].length];
 		int[] matrixBColumn1 = { matrixB[0][0], matrixB[1][0], matrixB[2][0] };
 		int[] matrixBColumn2 = { matrixB[0][1], matrixB[1][1], matrixB[2][1] };
 		int[] matrixBColumn3 = { matrixB[0][2], matrixB[1][2], matrixB[2][2] };
 
 		for (int i = 0; i < matrixA.length; i++) {
-			SynchronousChannel channel = actualCalculationProcess(matrixA[i], matrixBColumn1, matrixBColumn2,
+			SynchronousChannel channel = actualCalculationProcess(matrixA[i],i, matrixBColumn1, matrixBColumn2,
 					matrixBColumn3);
-			System.out.println("one row calculated");
-			int j = 0;
-			while (!channel.isEmpty()) {
-				try {
-					result[i][j] = channel.receive();
-				} catch (InterruptedException e) {
-					System.out.println(ERROR_MESSAGE);
-					e.printStackTrace();
-				}
-				j++;
-			}
+//			int j = 0;
+//			try {
+//				while (channel.receive() != null) {
+//					try {
+//						result[i][j] = channel.receive();
+//					} catch (InterruptedException e) {
+//						System.out.println(ERROR_MESSAGE);
+//						e.printStackTrace();
+//					}
+//					j++;
+//				}
+//			} catch (InterruptedException e) {
+//				System.out.println(ERROR_MESSAGE);
+//				e.printStackTrace();
+//			}
 		}
 
 		// this is what the multiplication with loops would look like:
@@ -42,10 +47,10 @@ public class MatrixMultiplication {
 		// System.out.println("\n");
 		// }
 
-		return result;
+		return MatrixMultiplication.result;
 	}
 
-	private static SynchronousChannel actualCalculationProcess(int[] matrixARow, int[]... matrixBColumns) {
+	private static SynchronousChannel actualCalculationProcess(int[] matrixARow, int numberOfRow, int[]... matrixBColumns) {
 		SynchronousChannel channel = new SynchronousChannel();
 		Thread[] threads = new Thread[matrixBColumns.length];
 
@@ -61,9 +66,9 @@ public class MatrixMultiplication {
 				@Override
 				public void run() {
 					try {
-						synchronized (this) {
 							channel.send(multiply(matrixARow, matrixBColumns[column1]));
-						}
+							result[numberOfRow][column1] = channel.receive();
+						
 					} catch (InterruptedException e) {
 						System.out.println(ERROR_MESSAGE);
 						e.printStackTrace();

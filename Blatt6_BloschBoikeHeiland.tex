@@ -5,10 +5,29 @@
 		\input{formatAndHeader.tex}
 		
 		\section*{Aufgabe 2}
-			\paragraph*{a}.
+			\paragraph*{a)}
 				\begin{itemize}
-					\item $P_1$ wird von $P_2$ in eine Warteschlange eingereiht und $P_2$ geht in den kritischen Abschnitt
+					\item $P_1$ wird von $P_2$ in eine Warteschlange eingereiht und $P_2$ geht in den kritischen Abschnitt, wenn $P_2$ fertig ist sendet er $"reply"$ an $P_1$
 					\item $P_2$ sendet $"reply"$ an $P_1$ und wartet auf Antwort von $P_1$
 					\item $P_2$ sendet $"reply"$ an $P_1$
 				\end{itemize}
+			
+			\paragraph*{b)}
+			$P_4 \rightarrow P_2 \rightarrow P_3 \rightarrow P_6 \rightarrow P_1 \rightarrow P_5$
+			
+			\paragraph*{c)}
+			Beispiel Vorlesung "Nachrichtenaustausch" Seite 56
+			
+			\paragraph*{d)}
+			!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			
+			\paragraph*{e)}
+			Prozesse der Anzahl n, senden an jeweils n-1 prozesse nachrichten x mal\\
+			$(n \cdot (n-1)) \cdot x \Rightarrow n^2$
+			
+			
+		\section*{Aufgabe 3}
+			\paragraph*{a)}
+				Wenn mehrere Prozesse requesten, kann ein Prozess aushungern, da der Token zufällig zugeteilt wird.\\
+				Bsp.: P1 requested bei P2, P3 und P4 requesten im Wechsel immer wieder, sodass P1 nie den Token bekommt
 	\end{document}
