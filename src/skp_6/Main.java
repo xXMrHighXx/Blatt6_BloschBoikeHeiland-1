@@ -10,6 +10,7 @@ public class Main {
 
 		int[][] matrixAxB = MatrixMultiplication.multiplyMatrices(matrixA, matrixB);
 
+		System.out.println("Calculation finished!");
 		printMatrices(matrixA, matrixB, matrixAxB);
 
 	}

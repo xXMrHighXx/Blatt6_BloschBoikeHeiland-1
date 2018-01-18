@@ -2,38 +2,106 @@ package skp_6;
 
 public class MatrixMultiplication {
 
+	private static final String WRONG_FORMAT = "The format of the matrices doesn't allow multiplication!";
+	private static final String ERROR_MESSAGE = "Something went wrong...";
+
 	public static int[][] multiplyMatrices(int[][] matrixA, int[][] matrixB) {
 		// TODO: Multiply Matrices matrixA and matrixB and return result
-		
+
 		if (matrixA.length != matrixB[0].length) {
-			throw new IllegalArgumentException("The format of the matrices doesn't allow multiplication!");
+			throw new IllegalArgumentException(WRONG_FORMAT);
 		}
-		
+
 		// Ergebnismatrix hat soviele Zeilen wie A und so viele Spalten wie B
 		int[][] result = new int[matrixA.length][matrixB[0].length];
+		int[] matrixBColumn1 = { matrixB[0][0], matrixB[1][0], matrixB[2][0] };
+		int[] matrixBColumn2 = { matrixB[0][1], matrixB[1][1], matrixB[2][1] };
+		int[] matrixBColumn3 = { matrixB[0][2], matrixB[1][2], matrixB[2][2] };
 
 		for (int i = 0; i < matrixA.length; i++) {
-			for (int j = 0; j < matrixB[i].length; j++) {
-				for (int k = 0; k < matrixA[i].length; k++) {
-					result[i][j] += matrixA[i][k] * matrixB[k][j];
+			SynchronousChannel channel = actualCalculationProcess(matrixA[i], matrixBColumn1, matrixBColumn2,
+					matrixBColumn3);
+			System.out.println("one row calculated");
+			int j = 0;
+			while (!channel.isEmpty()) {
+				try {
+					result[i][j] = channel.receive();
+				} catch (InterruptedException e) {
+					System.out.println(ERROR_MESSAGE);
+					e.printStackTrace();
 				}
+				j++;
 			}
 		}
-		
-//		for (int i = 0; i < result.length; i++) {
-//			for (int j = 0; j < result[i].length; j++) {
-//				System.out.print(result[i][j] + " ");
-//			}
-//			System.out.println("\n");
-//		}
-		
+
+		// this is what the multiplication with loops would look like:
+		// for (int i = 0; i < result.length; i++) {
+		// for (int j = 0; j < result[i].length; j++) {
+		// System.out.print(result[i][j] + " ");
+		// }
+		// System.out.println("\n");
+		// }
+
 		return result;
 	}
 
-	public static void main(String[] args) {		
-		int[][] matrixA = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-		int[][] matrixB = { { 1, 0, 2 }, { 0, 1, 2 }, { 1, 0, 0 } };
-		
-		MatrixMultiplication.multiplyMatrices(matrixA, matrixB);
+	private static SynchronousChannel actualCalculationProcess(int[] matrixARow, int[]... matrixBColumns) {
+		SynchronousChannel channel = new SynchronousChannel();
+		Thread[] threads = new Thread[matrixBColumns.length];
+
+		for (int column = 0; column < matrixBColumns.length; column++) {
+			final int column1 = column;
+
+			/*
+			 * Create a thread which multiplies one row of matrix A with the
+			 * columns of matrix B.
+			 */
+			threads[column] = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						synchronized (this) {
+							channel.send(multiply(matrixARow, matrixBColumns[column1]));
+						}
+					} catch (InterruptedException e) {
+						System.out.println(ERROR_MESSAGE);
+						e.printStackTrace();
+					}
+				}
+
+				/**
+				 * Multiplies one row of a <code>matrix A</code> with one
+				 * <code>column</code> of a matrix B, thus producing one entry
+				 * of the resulting matrix (<code>result</code>).
+				 * 
+				 * @param matrixARow
+				 * @param column
+				 * @return result
+				 */
+				private Integer multiply(int[] matrixARow, int[] column) {
+					int result = 0;
+					for (int i = 0; i < matrixARow.length; i++) {
+						result += matrixARow[i] * column[i];
+					}
+					return result;
+				}
+			});
+
+			// run the Thread
+			threads[column].run();
+		}
+
+		// close the calculation threads
+		for (int i = 0; i < threads.length; i++) {
+			try {
+				threads[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return channel;
 	}
+
 }
