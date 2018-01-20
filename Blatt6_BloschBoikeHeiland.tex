@@ -1,37 +1,46 @@
 \documentclass{scrartcl}
-	\input{usepackage.tex}
+\input{usepackage.tex}
+
+\begin{document}
+	\input{formatAndHeader.tex}
 	
-	\begin{document}
-		\input{formatAndHeader.tex}
-		
-		\section*{Aufgabe 2}
-			\paragraph*{a)}
-				\begin{itemize}
-					\item $P_1$ wird von $P_2$ in eine Warteschlange eingereiht und $P_2$ geht in den kritischen Abschnitt, wenn $P_2$ fertig ist sendet er $"reply"$ an $P_1$
-					\item $P_2$ sendet $"reply"$ an $P_1$ und wartet auf Antwort von $P_1$
-					\item $P_2$ sendet $"reply"$ an $P_1$
-				\end{itemize}
-			
-			\paragraph*{b)}
+	\section*{Aufgabe 2}
+		\paragraph*{a)}
+			\begin{itemize}
+				\item $P_1$ wird von $P_2$ in eine Warteschlange eingereiht und $P_2$ geht in den kritischen Abschnitt, wenn $P_2$ fertig ist sendet er $"reply"$ an $P_1$
+				\item $P_2$ sendet $"reply"$ an $P_1$ und wartet auf Antwort von $P_1$
+				\item $P_2$ sendet $"reply"$ an $P_1$
+			\end{itemize}
+	
+		\paragraph*{b)}
 			$P_4 \rightarrow P_2 \rightarrow P_3 \rightarrow P_6 \rightarrow P_1 \rightarrow P_5$
-			
-			\paragraph*{c)}
-			Beispiel Vorlesung "Nachrichtenaustausch" Seite 56
-			
-			\paragraph*{d)}
+	
+		\paragraph*{c)}
+			Nehmen wir an, P1 (Ticketnummer 5) und P2 (Ticketnummer 10) möchten gleichzeitig in den kritischen Abschnitt eintreten, die beiden Prozesse senden jeweils eine request nachricht, P1 erhält nun aufgrund seiner kleineren Ticketnummer den reply von P2. P1 tritt also in den kritischen Abschnitt ein und sendet danach einen Reply an P2. Danach setzt P1 aber nun seine neue Ticketnummer auf 8 und gelangt so wieder in den Kritischen Abschnitt zusammen mit P2. Siehe Vorlesung Nachrichtenaustausch S. 55-56.
+	
+		\paragraph*{d)}
 			!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			
-			\paragraph*{e)}
-			Prozesse der Anzahl n, senden an jeweils n-1 prozesse Nachrichten x mal\\
-			$(n \cdot (n-1)) \cdot x \Rightarrow n^2$\pagebreak
-			
-			
-		\section*{Aufgabe 3}
-			\paragraph*{a)}
-				Wenn zum Zeitpunkt der Tokenverteilung mehrere Requests von Prozessen vorliegen, kann ein Prozess aushungern, da der Token zufällig zugeteilt wird.\\
-				Bsp.: P1 und P2 requesten im Wechsel immer wieder, sodass P3 nie den Token bekommt (s.u.):\\[2em]
-						
-				\begin{figure}[h]
-					\includegraphics[scale=0.7]{aufgabe3a.pdf}
-				\end{figure}
-	\end{document}
+	
+		\paragraph*{e)}
+		Prozesse der Anzahl n, senden an jeweils n-1 prozesse Nachrichten x mal\\
+		$(n \cdot (n-1)) \cdot x \Rightarrow n^2$\pagebreak
+	
+	
+	\section*{Aufgabe 3}
+		\paragraph*{a)}
+		Wenn zum Zeitpunkt der Tokenverteilung mehrere Requests von Prozessen vorliegen, kann ein Prozess aushungern, da der Token zufällig zugeteilt wird.\\
+		Bsp.: P1 und P2 requesten im Wechsel immer wieder, sodass P3 nie den Token bekommt (s.u.):\\[2em]
+	
+		\begin{figure}[h]
+			\includegraphics[scale=0.7]{aufgabe3a.pdf}
+		\end{figure}
+	
+		\paragraph*{b)}
+			\subparagraph*{i.}
+				Es müssen P7 und P8 atomar ausgeführt werden in der main Methode genauso wie q3 und q4 in der recieve Methode.
+	
+			\subparagraph*{ii.}
+				Wird erst p7 und danach q3 und q4 ausgeführt ist der wechselseitige Ausschluss nicht mehr gewährleistet. 
+			\subparagraph*{iii.}
+	
+\end{document}
